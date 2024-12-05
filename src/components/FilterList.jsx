@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { FilterContext } from "../pages/Home";
+import Loading from "./Loading";
 
 const FilterList = () => {
   const { category, setCategory } = useContext(FilterContext);
   const [categories, setCategories] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -15,11 +17,21 @@ const FilterList = () => {
         setCategories(data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="p-10">
+        <Loading />
+      </div>
+    );
+  }
 
   if (!categories) {
     return;
