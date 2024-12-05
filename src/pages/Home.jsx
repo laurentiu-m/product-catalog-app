@@ -6,6 +6,8 @@ import MobileFilter from "../components/MobileFilter";
 import SearchInput from "../components/SearchInput";
 import SortButton from "../components/SortButtons";
 import FilterMenu from "../components/FilterMenu";
+import Loading from "../components/Loading";
+import NotFound from "../components/NotFound";
 
 export const FilterContext = createContext();
 
@@ -45,6 +47,7 @@ const Home = () => {
           ...prevState,
           searched: false,
         }));
+        setShowFilter(false);
       } else {
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -67,6 +70,8 @@ const Home = () => {
   };
 
   const sortProducts = (order) => {
+    setLoading(true);
+
     const productsToSort = searchedProducts.searched
       ? [...searchedProducts.searchedResult]
       : [...products];
@@ -83,26 +88,35 @@ const Home = () => {
     } else {
       setProducts(sortedProducts);
     }
+
+    setLoading(false);
   };
 
   const searchForProducts = (input) => {
-    if (input === "") return;
+    setLoading(true);
 
-    console.log("used");
-    const result = [...searchedProducts.allProducts].filter((product) => {
-      return product.title.toLowerCase().includes(input.toLowerCase());
-    });
+    if (input === "") {
+      setSearchedProducts((prevState) => ({
+        ...prevState,
+        searched: false,
+      }));
+    } else {
+      const result = [...searchedProducts.allProducts].filter((product) => {
+        return product.title.toLowerCase().includes(input.toLowerCase());
+      });
 
-    setSearchedProducts((prevState) => ({
-      ...prevState,
-      searched: true,
-      searchedResult: result,
-    }));
+      setSearchedProducts((prevState) => ({
+        ...prevState,
+        searched: true,
+        searchedResult: result,
+      }));
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchData();
-    console.log("was used");
   }, [category]);
 
   useEffect(() => {
@@ -118,7 +132,15 @@ const Home = () => {
   }, [showFilter]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-lg font-semibold w-full m-auto sm:text-2xl">
+        <h1>{error}</h1>
+      </div>
+    );
   }
 
   return (
@@ -132,7 +154,7 @@ const Home = () => {
         searchForProducts,
       }}
     >
-      <div className="flex flex-col gap-6 lg:gap-10">
+      <div className="w-full flex flex-col gap-6 lg:gap-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-inter text-2xl uppercase sm:text-3xl lg:text-4xl">
             Products
@@ -143,7 +165,7 @@ const Home = () => {
           {isDesktop && <SortButton />}
         </div>
 
-        <div className="relative flex flex-col gap-8 lg:flex-row">
+        <div className="relative w-full flex flex-col gap-8 lg:flex-row">
           {!isDesktop && <FilterMenu />}
           {isDesktop ? <FilterList /> : <MobileFilter />}
 
@@ -160,7 +182,7 @@ const Home = () => {
                   />
                 ))
               ) : (
-                <div>{`Didn't find anything, sorry >_<`}</div>
+                <NotFound />
               )
             ) : (
               products.map((product) => (
