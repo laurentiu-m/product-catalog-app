@@ -9,7 +9,7 @@ const App = () => {
     <div className="min-h-screen flex flex-col font-poppins text-color">
       <Navbar />
 
-      <main className="flex flex-grow m-5 sm:m-10 lg:w-[75%] lg:mx-auto">
+      <main className="flex flex-grow m-5 sm:m-10 lg:w-[80%] lg:mx-auto">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<ShoppingCart />} />
