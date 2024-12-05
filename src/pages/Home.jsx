@@ -153,6 +153,7 @@ const Home = () => {
                 searchedProducts.searchedResult.map((product) => (
                   <ProductCard
                     key={product.id}
+                    product_id={product.id}
                     image={product.image}
                     price={product.price}
                     title={product.title}
@@ -165,6 +166,7 @@ const Home = () => {
               products.map((product) => (
                 <ProductCard
                   key={product.id}
+                  product_id={product.id}
                   image={product.image}
                   price={product.price}
                   title={product.title}
