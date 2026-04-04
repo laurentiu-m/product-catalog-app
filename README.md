@@ -1,7 +1,5 @@
 # SHOP.HERE
 
-https://shop-here-react.netlify.app/
-
 ## Description
 A simple Product Catalog application where users can browse products, filter by category, sort by price, and add items to a shopping cart. Built with React and Tailwind, it demonstrates reusable components, state management with useState and Context API, API integration for dynamic data, using modern CSS styling like Tailwind, and Git for version control.
 
